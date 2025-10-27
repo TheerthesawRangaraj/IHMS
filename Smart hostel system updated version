@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Hostel Management 4.0</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: #f5f8fc;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(135deg, #004b8d, #0074d9);
+      color: white;
+      padding: 18px;
+      text-align: center;
+      font-size: 1.6em;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
+
+    section {
+      display: none;
+      background: white;
+      margin: 25px auto;
+      padding: 25px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 750px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    #home { display: block; }
+
+    input, textarea, button {
+      width: 95%;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    button {
+      background: #004b8d;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover { background: #0074d9; transform: scale(1.02); }
+
+    /* Chat section */
+    #chatSection {
+      background: #eef3f9;
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    #chatBox {
+      border: 1px solid #ccc;
+      background: white;
+      border-radius: 8px;
+      padding: 10px;
+      height: 250px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+
+    .studentMsg {
+      text-align: right;
+      color: #004b8d;
+      margin: 5px 0;
+    }
+
+    .wardenMsg {
+      text-align: left;
+      color: #555;
+      margin: 5px 0;
+    }
+
+    /* AI Assistant */
+    #aiAssistant {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      width: 320px;
+      max-height: 450px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid #ccc;
+    }
+
+    #aiHeader {
+      background: #004b8d;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    #aiMessages {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      background: #f7f9fc;
+    }
+
+    #aiInputArea {
+      display: flex;
+      padding: 8px;
+      background: #fff;
+      border-top: 1px solid #ccc;
+    }
+
+    #aiInput {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-right: 5px;
+    }
+
+    #aiBtn, #voiceBtn {
+      background: #004b8d;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 10px;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: #004b8d;
+      color: white;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <header>Smart Hostel Management System 4.0</header>
+
+  <!-- Home -->
+  <section id="home">
+    <h2>Welcome to Smart Hostel Portal</h2>
+    <button onclick="showSection('studentLogin')">Student Login</button>
+    <button onclick="showSection('wardenLogin')">Warden Login</button>
+  </section>
+
+  <!-- Student Login -->
+  <section id="studentLogin">
+    <h2>Student Login</h2>
+    <input id="studentEmail" placeholder="Email">
+    <input id="studentPass" type="password" placeholder="Password">
+    <button onclick="loginStudent()">Login</button>
+    <button onclick="showSection('home')">Back</button>
+  </section>
+
+  <!-- Room Booking -->
+  <section id="roomBooking">
+    <h2>Enter or Book Your Room</h2>
+    <input id="roomNumber" placeholder="Enter Room Number">
+    <button onclick="saveRoom()">Confirm Room</button>
+  </section>
+
+  <!-- Student Dashboard -->
+  <section id="studentDashboard">
+    <h2>Student Dashboard</h2>
+    <p id="roomDisplay"></p>
+    <button onclick="showSection('home')">Logout</button>
+
+    <h3>Service Request</h3>
+    <input id="serviceType" placeholder="Type of Service (Plumbing, Cleaning...)">
+    <button onclick="requestService()">Submit Request</button>
+    <p id="serviceStatus"></p>
+
+    <h3>Leave Request</h3>
+    <input type="datetime-local" id="leaveStart">
+    <input type="datetime-local" id="leaveEnd">
+    <textarea id="leaveReason" placeholder="Reason for leave"></textarea>
+    <button onclick="requestLeave()">Request Leave</button>
+
+    <h3>Queries</h3>
+    <textarea id="studentQuery" placeholder="Type your query..."></textarea>
+    <button onclick="submitQuery()">Send Query</button>
+    <p id="queryStatus"></p>
+
+    <h3>Feedback</h3>
+    <textarea id="studentFeedback" placeholder="Write your feedback..."></textarea>
+    <button onclick="submitFeedback()">Submit Feedback</button>
+    <p id="feedbackStatus"></p>
+
+    <h3>Chat with Warden</h3>
+    <div id="chatSection">
+      <div id="chatBox"></div>
+      <input id="chatInput" placeholder="Type your message...">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </section>
+
+  <!-- Warden Login -->
+  <section id="wardenLogin">
+    <h2>Warden Login</h2>
+    <input id="wardenEmail" placeholder="Email">
+    <input id="wardenPass" type="password" placeholder="Password">
+    <button onclick="loginWarden()">Login</button>
+    <button onclick="showSection('home')">Back</button>
+  </section>
+
+  <!-- Warden Dashboard -->
+  <section id="wardenDashboard">
+    <h2>Warden Dashboard</h2>
+    <button onclick="showSection('home')">Logout</button>
+    <div id="wardenChatBox"></div>
+  </section>
+
+  <!-- AI Assistant -->
+  <div id="aiAssistant">
+    <div id="aiHeader">AI Assistant</div>
+    <div id="aiMessages">
+      <div><b>AI:</b> Hello! How can I assist you with hostel-related queries?</div>
+    </div>
+    <div id="aiInputArea">
+      <input id="aiInput" placeholder="Ask something...">
+      <button id="aiBtn">Send</button>
+      <button id="voiceBtn" onclick="startVoice()">🎤</button>
+    </div>
+  </div>
+
+  <footer>Smart Hostel Management © 2025</footer>
+
+  <script>
+    let studentRoom = "";
+    let messages = [];
+
+    function showSection(id){
+      document.querySelectorAll('section').forEach(s => s.style.display='none');
+      document.getElementById(id).style.display='block';
+    }
+
+    function loginStudent(){
+      if(document.getElementById('studentEmail').value && document.getElementById('studentPass').value){
+        showSection('roomBooking');
+      } else alert("Enter valid credentials.");
+    }
+
+    function saveRoom(){
+      studentRoom = document.getElementById('roomNumber').value;
+      if(studentRoom){
+        showSection('studentDashboard');
+        document.getElementById('roomDisplay').innerText = "Room Number: " + studentRoom;
+      } else alert("Enter your room number.");
+    }
+
+    function loginWarden(){
+      showSection('wardenDashboard');
+      updateWardenChat();
+    }
+
+    // Messaging system
+    function sendMessage(){
+      const msg = document.getElementById('chatInput').value.trim();
+      if(!msg) return;
+      messages.push({ sender: "student", text: msg });
+      updateChat();
+      updateWardenChat();
+      document.getElementById('chatInput').value = "";
+    }
+
+    function updateChat(){
+      const box = document.getElementById('chatBox');
+      box.innerHTML = "";
+      messages.forEach(m => {
+        const div = document.createElement('div');
+        div.className = m.sender === "student" ? "studentMsg" : "wardenMsg";
+        div.innerText = `${m.sender === "student" ? "You" : "Warden"}: ${m.text}`;
+        box.appendChild(div);
+      });
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function updateWardenChat(){
+      const wardenBox = document.getElementById('wardenChatBox');
+      wardenBox.innerHTML = "<h3>Student Chats</h3>";
+      messages.forEach((m, i) => {
+        const div = document.createElement('div');
+        div.className = "wardenMsg";
+        div.innerText = `${m.sender === "student" ? "Student" : "You"}: ${m.text}`;
+        wardenBox.appendChild(div);
+      });
+      const input = document.createElement('input');
+      input.id = "wardenReply";
+      input.placeholder = "Type reply...";
+      const btn = document.createElement('button');
+      btn.innerText = "Send Reply";
+      btn.onclick = () => {
+        const txt = input.value.trim();
+        if(txt){
+          messages.push({ sender: "warden", text: txt });
+          updateChat();
+          updateWardenChat();
+          input.value = "";
+        }
+      };
+      wardenBox.appendChild(input);
+      wardenBox.appendChild(btn);
+    }
+
+    // AI Assistant logic
+    document.getElementById('aiBtn').addEventListener('click', askAI);
+    document.getElementById('aiInput').addEventListener('keypress', e => { if(e.key === 'Enter') askAI(); });
+
+    function askAI(){
+      const input = document.getElementById('aiInput').value.trim().toLowerCase();
+      if(!input) return;
+      const aiBox = document.getElementById('aiMessages');
+      aiBox.innerHTML += `<div><b>You:</b> ${input}</div>`;
+      let reply = "I’m not sure. Please contact your warden.";
+      if(input.includes("leave")) reply = "Leave requests can be submitted via your dashboard under 'Leave Request'.";
+      else if(input.includes("service")) reply = "Submit your service request mentioning your room number.";
+      else if(input.includes("room")) reply = "Students can book or confirm their rooms after login.";
+      else if(input.includes("rules")) reply = "Hostel rules: Maintain cleanliness, follow curfew timings, and be respectful.";
+      aiBox.innerHTML += `<div><b>AI:</b> ${reply}</div>`;
+      aiBox.scrollTop = aiBox.scrollHeight;
+      document.getElementById('aiInput').value = "";
+    }
+
+    // Voice Assistant
+    function startVoice(){
+      if(!('webkitSpeechRecognition' in window)){
+        alert("Voice recognition not supported.");
+        return;
+      }
+      let recognition = new webkitSpeechRecognition();
+      recognition.lang = 'en-IN';
+      recognition.start();
+      recognition.onresult = function(e){
+        let text = e.results[0][0].transcript;
+        document.getElementById('aiInput').value = text;
+        askAI();
+      };
+    }
+  </script>
+</body>
+</html>
