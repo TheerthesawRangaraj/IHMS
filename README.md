@@ -124,7 +124,7 @@ button:hover {
   <h2> Student Dashboard</h2>
   <button onclick="goBack('studentDashboard','home')">Logout</button>
 
-  <h3>🏘 Room Booking</h3>
+  <h3> Room Booking</h3>
   <input id="room" placeholder="Enter Room Number">
   <input id="group" placeholder="Enter Group Members (comma)">
   <button onclick="bookRoom()">Book Room</button>
@@ -145,7 +145,7 @@ button:hover {
   <h3> Chat with Warden</h3>
   <input id="chatInput" placeholder="Type message">
   <button onclick="sendChat()">Send</button>
-  <button onclick="voiceToText('student')">🎙 Voice</button>
+  <button onclick="voiceToText('student')"> Voice</button>
   <div id="chatBox"></div>
 
   <h3> Student To-Do List</h3>
@@ -190,7 +190,7 @@ button:hover {
   <h3> Chat with Students</h3>
   <input id="wardenChatInput" placeholder="Type message">
   <button onclick="sendChatWarden()">Send</button>
-  <button onclick="voiceToText('warden')">🎙 Voice</button>
+  <button onclick="voiceToText('warden')"> Voice</button>
   <div id="chatBoxWarden"></div>
 
   <h3> Warden To-Do List</h3>
